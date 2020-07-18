@@ -20,22 +20,9 @@ class _HomeScreenState extends State<HomeScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             BuildAppBar(),
-            SizedBox(height: 20),
-
-            Text(
-              'Choose a Car',
-              style: TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-                letterSpacing: 1,
-              ),
-            ),
-
-            BuildTextSwitch(),
-
             SizedBox(height: 10),
-
+            buildText('Choose a Car'),
+            BuildTextSwitch(),
             Expanded(
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
@@ -46,13 +33,115 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
+            buildText('Top Dealers'),
+            buildBottomContainer(Icons.message, 'GreadX London', kpink),
+            SizedBox(height: 10),
+            buildBottomContainer(
+                Icons.panorama_fish_eye, 'GreadX London', Colors.blue),
+            SizedBox(height: 10),
           ],
         ),
       ),
+      bottomNavigationBar: buildBottomNavigationBar(),
+    );
+  }
+
+  
+}
+
+// 1 -  ..................................................
+class BuildAppBar extends StatelessWidget {
+  const BuildAppBar({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: <Widget>[
+        BuildContainer(
+          color: kaccentColor,
+          child: Image.asset(
+            'assets/icons/bell.png',
+            color: Colors.white,
+          ),
+        ),
+        Spacer(),
+        BuildContainer(
+          color: kaccentColor,
+          child: Image.asset(
+            'assets/icons/search.png',
+            color: Colors.white,
+          ),
+        ),
+        SizedBox(width: 15),
+        BuildContainer(
+          color: kaccentColor,
+          child: Image.asset(
+            'assets/icons/adjust.png',
+            color: Colors.white,
+          ),
+        ),
+      ],
     );
   }
 }
 
+// class BuildContainer extends StatelessWidget {
+//   final Color color;
+//   final Widget child;
+//   const BuildContainer({
+//     this.child,
+//     this.color,
+//     Key key,
+//   }) : super(key: key);
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       width: 50,
+//       height: 50,
+//       padding: EdgeInsets.all(12.0),
+//       decoration: BoxDecoration(
+//         color: color,
+//         border: Border.all(color: kaccentColor, width: 1.0),
+//         borderRadius: BorderRadius.circular(10),
+//       ),
+//       child: child,
+//     );
+//   }
+// }
+
+// 2 - ..........................................................
+class BuildTextSwitch extends StatefulWidget {
+  @override
+  _BuildTextSwitchState createState() => _BuildTextSwitchState();
+}
+
+class _BuildTextSwitchState extends State<BuildTextSwitch> {
+  var driverOn = true;
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: <Widget>[
+        Text(
+          'With a Driver',
+          style: TextStyle(fontSize: 15, color: Colors.grey, letterSpacing: 1),
+        ),
+        Spacer(),
+        Switch(
+          activeColor: Colors.white,
+          value: driverOn,
+          onChanged: (value) {
+            setState(() {
+              driverOn = value;
+            });
+          },
+        ),
+      ],
+    );
+  }
+}
 
 //3 - ................................................
 class CarItem extends StatelessWidget {
@@ -68,7 +157,7 @@ class CarItem extends StatelessWidget {
           height: 280,
           width: 215,
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(25),
+            borderRadius: BorderRadius.circular(22),
             gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
@@ -158,85 +247,123 @@ class CarItem extends StatelessWidget {
   }
 }
 
-// 1 -  ..................................................
-class BuildAppBar extends StatelessWidget {
-  const BuildAppBar({
-    Key key,
-  }) : super(key: key);
+// 5 - ......................................................
+Text buildText(String text) {
+  return Text(
+    text,
+    style: TextStyle(
+      fontSize: 28,
+      fontWeight: FontWeight.bold,
+      color: Colors.white,
+      letterSpacing: 1,
+    ),
+  );
+}
 
-  @override
-  Widget build(BuildContext context) {
-    return Row(
+// 6 - ................................
+Container buildBottomContainer(IconData icon, String text, Color color) {
+  return Container(
+    padding: EdgeInsets.all(kpadding / 2),
+    width: double.infinity,
+    height: 75.0,
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(12.0),
+      color: kaccentColor,
+    ),
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         BuildContainer(
-          color: kaccentColor,
-          child: Image.asset(
-            'assets/icons/bell.png',
+          child: Icon(
+            icon,
             color: Colors.white,
           ),
+          color: color,
+        ),
+        SizedBox(width: 10.0),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              text,
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+            Text(
+              '823 Mraz Wall Apt. 324',
+              style: TextStyle(
+                fontSize: 10,
+                color: Colors.white70,
+                letterSpacing: 1,
+              ),
+            )
+          ],
         ),
         Spacer(),
-        BuildContainer(
-          color: kaccentColor,
-          child: Image.asset(
-            'assets/icons/search.png',
-            color: Colors.white,
-          ),
-        ),
-        SizedBox(width: 15),
-        BuildContainer(
-          color: kaccentColor,
-          child: Image.asset(
-            'assets/icons/adjust.png',
-            color: Colors.white,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-// Widget _buildContainer(BuildContext ctx, Color color, Widget child) {
-//   return Container(
-//     width: 50,
-//     height: 50,
-//     padding: EdgeInsets.all(12.0),
-//     decoration: BoxDecoration(
-//       color: color,
-//       border: Border.all(color: kaccentColor, width: 1.0),
-//       borderRadius: BorderRadius.circular(10),
-//     ),
-//     child: child,
-//   );
-// }
-
-// 2 - ..........................................................
-class BuildTextSwitch extends StatefulWidget {
-  @override
-  _BuildTextSwitchState createState() => _BuildTextSwitchState();
-}
-
-class _BuildTextSwitchState extends State<BuildTextSwitch> {
-  var driverOn = true;
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: <Widget>[
-        Text(
-          'With a Driver',
-          style: TextStyle(fontSize: 15, color: Colors.grey, letterSpacing: 1),
-        ),
-        Spacer(),
-        Switch(
-          activeColor: Colors.white,
-          value: driverOn,
-          onChanged: (value) {
-            setState(() {
-              driverOn = value;
-            });
-          },
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Row(
+              children: <Widget>[
+                Icon(Icons.star, size: 17, color: Colors.yellow),
+                Icon(Icons.star, size: 17, color: Colors.yellow),
+                Icon(Icons.star, size: 17, color: Colors.yellow),
+                Icon(Icons.star, size: 17, color: Colors.yellow),
+                Icon(Icons.star_border, size: 17, color: Colors.yellow),
+              ],
+            ),
+            SizedBox(height: 5),
+            Text(
+              '234 Offers',
+              style: TextStyle(
+                fontSize: 12,
+                color: Colors.blueAccent,
+                letterSpacing: 1,
+              ),
+            )
+          ],
         ),
       ],
+    ),
+  );
+}
+
+
+
+// 7 - ..................................................
+Container buildBottomNavigationBar() {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 25, vertical: 18),
+      color: kaccentColor,
+      height: 65,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Image.asset(
+            'assets/icons/app.png',
+            color: kbottonColor,
+            height: 40,
+          ),
+          Image.asset(
+            'assets/icons/calendar.png',
+            color: Colors.grey,
+            height: 40,
+          ),
+          Image.asset(
+            'assets/icons/pin.png',
+            color: Colors.grey,
+            height: 40,
+          ),
+          Image.asset(
+            'assets/icons/user.png',
+            color: Colors.grey,
+            height: 40,
+          ),
+        ],
+      ),
     );
   }
-}
