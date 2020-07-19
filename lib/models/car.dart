@@ -21,8 +21,8 @@ List<Car> cars = [
   Car(
     id: 1,
     price: 325.0,
-    type: 'Ford',
-    name: 'Ford MG57',
+    type: 'Jaguar',
+    name: 'Jaguar M557',
     imageUrl: 'assets/images/ford1.png',
     fColor: Colors.blue[600],
     sColor: Colors.black87,

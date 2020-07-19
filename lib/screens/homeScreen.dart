@@ -1,6 +1,8 @@
+import 'package:car_app/helper/buildAppBar.dart';
 import 'package:car_app/helper/buildContainer.dart';
 import 'package:car_app/helper/costanse.dart';
 import 'package:car_app/models/car.dart';
+import 'package:car_app/screens/detailScreen.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -15,13 +17,13 @@ class _HomeScreenState extends State<HomeScreen> {
       backgroundColor: kprimaryColor,
       body: Padding(
         padding:
-            const EdgeInsets.only(left: kpadding, right: kpadding, top: 35),
+            const EdgeInsets.only(left: kpadding, right: kpadding, top: 30),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            BuildAppBar(),
+            BuildAppBar(iconUrl: 'assets/icons/bell.png'),
             SizedBox(height: 10),
-            buildText('Choose a Car'),
+            _buildText('Choose a Car'),
             BuildTextSwitch(),
             Expanded(
               child: ListView.builder(
@@ -29,63 +31,81 @@ class _HomeScreenState extends State<HomeScreen> {
                 itemCount: cars.length,
                 itemBuilder: (context, i) => Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: CarItem(car: cars[i]),
+                  child: CarItem(
+                    car: cars[i],
+                    press: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => DetailScreen(
+                            car: cars[i],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
                 ),
               ),
             ),
-            buildText('Top Dealers'),
-            buildBottomContainer(Icons.message, 'GreadX London', kpink),
+            _buildText('Top Dealers'),
+            _buildDealerContainer(Icons.view_week, 'GreadX London', kpink),
             SizedBox(height: 10),
-            buildBottomContainer(
-                Icons.panorama_fish_eye, 'GreadX London', Colors.blue),
-            SizedBox(height: 10),
+            _buildDealerContainer(
+                Icons.panorama_fish_eye, 'National Car Rental', kblue),
+            SizedBox(height: 15),
           ],
         ),
       ),
-      bottomNavigationBar: buildBottomNavigationBar(),
+      bottomNavigationBar: BuildBottomNavigationBar(),
     );
   }
-
-  
 }
 
 // 1 -  ..................................................
-class BuildAppBar extends StatelessWidget {
-  const BuildAppBar({
-    Key key,
-  }) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: <Widget>[
-        BuildContainer(
-          color: kaccentColor,
-          child: Image.asset(
-            'assets/icons/bell.png',
-            color: Colors.white,
-          ),
-        ),
-        Spacer(),
-        BuildContainer(
-          color: kaccentColor,
-          child: Image.asset(
-            'assets/icons/search.png',
-            color: Colors.white,
-          ),
-        ),
-        SizedBox(width: 15),
-        BuildContainer(
-          color: kaccentColor,
-          child: Image.asset(
-            'assets/icons/adjust.png',
-            color: Colors.white,
-          ),
-        ),
-      ],
-    );
-  }
-}
+// this is also going to Helper Widget
+// class BuildAppBar extends StatelessWidget {
+//   final String iconUrl;
+//   final Function func;
+//   const BuildAppBar({
+//     this.iconUrl,
+//     this.func,
+//     Key key,
+//   }) : super(key: key);
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Row(
+//       children: <Widget>[
+//         GestureDetector(
+//           onTap: func,
+//           child: BuildContainer(
+//             color: kaccentColor,
+//             child: Image.asset(
+//               iconUrl,
+//               color: Colors.white,
+//             ),
+//           ),
+//         ),
+//         Spacer(),
+//         BuildContainer(
+//           color: kaccentColor,
+//           child: Image.asset(
+//             'assets/icons/search.png',
+//             color: Colors.white,
+//           ),
+//         ),
+//         SizedBox(width: 15),
+//         BuildContainer(
+//           color: kaccentColor,
+//           child: Image.asset(
+//             'assets/icons/adjust.png',
+//             color: Colors.white,
+//           ),
+//         ),
+//       ],
+//     );
+//   }
+// }
 
 // class BuildContainer extends StatelessWidget {
 //   final Color color;
@@ -113,6 +133,19 @@ class BuildAppBar extends StatelessWidget {
 // }
 
 // 2 - ..........................................................
+Text _buildText(String text) {
+  return Text(
+    text,
+    style: TextStyle(
+      fontSize: 28,
+      fontWeight: FontWeight.bold,
+      color: Colors.white,
+      letterSpacing: 1,
+    ),
+  );
+}
+
+// 3 - ......................................................
 class BuildTextSwitch extends StatefulWidget {
   @override
   _BuildTextSwitchState createState() => _BuildTextSwitchState();
@@ -143,125 +176,122 @@ class _BuildTextSwitchState extends State<BuildTextSwitch> {
   }
 }
 
-//3 - ................................................
+//4 - ................................................
 class CarItem extends StatelessWidget {
   final Car car;
-  CarItem({this.car});
+  final Function press;
+  CarItem({
+    this.car,
+    this.press,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      overflow: Overflow.visible,
-      children: <Widget>[
-        Container(
-          height: 280,
-          width: 215,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(22),
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                car.fColor,
-                car.sColor,
-              ],
-            ),
-          ),
-        ),
-        Positioned(
-          child: Padding(
-            padding: const EdgeInsets.all(kpadding),
-            child: RichText(
-              text: TextSpan(
-                children: [
-                  TextSpan(
-                    text: '${car.type}\n',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                      fontSize: 22,
-                    ),
-                  ),
-                  TextSpan(
-                    text: '${car.name}',
-                    style: TextStyle(
-                      color: Colors.white,
-                      letterSpacing: 1,
-                    ),
-                  ),
+    return GestureDetector(
+      onTap: press,
+      child: Stack(
+        overflow: Overflow.visible,
+        children: <Widget>[
+          Container(
+            height: 280,
+            width: 215,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(22),
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  car.fColor,
+                  car.sColor,
                 ],
               ),
             ),
           ),
-        ),
-        Positioned(
-          top: 70,
-          left: kpadding / 2,
-          child: Image.asset(
-            '${car.imageUrl}',
-            width: 230,
-          ),
-        ),
-        Positioned(
-          top: 170,
-          child: Padding(
-            padding: const EdgeInsets.all(kpadding),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                RichText(
-                  text: TextSpan(
-                    children: [
-                      TextSpan(
-                        text: 'Per Day\n',
-                        style: TextStyle(
-                          color: Colors.white70,
-                        ),
+          Positioned(
+            child: Padding(
+              padding: const EdgeInsets.all(kpadding),
+              child: RichText(
+                text: TextSpan(
+                  children: [
+                    TextSpan(
+                      text: '${car.type}\n',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        fontSize: 22,
                       ),
-                      TextSpan(
-                        text: '\$${car.price}',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 25,
-                          letterSpacing: 1,
-                        ),
+                    ),
+                    TextSpan(
+                      text: '${car.name}',
+                      style: TextStyle(
+                        color: Colors.white,
+                        letterSpacing: 1,
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-                SizedBox(height: 10),
-                Text(
-                  'View Details',
-                  style: TextStyle(
-                    color: Colors.white70,
-                    letterSpacing: 1,
-                  ),
-                )
-              ],
+              ),
             ),
           ),
-        ),
-      ],
+          Positioned(
+            top: 70,
+            left: kpadding / 2,
+            child: Hero(
+              tag: car.id,
+              child: Image.asset(
+                '${car.imageUrl}',
+                width: 230,
+              ),
+            ),
+          ),
+          Positioned(
+            top: 170,
+            child: Padding(
+              padding: const EdgeInsets.all(kpadding),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  RichText(
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text: 'Per Day\n',
+                          style: TextStyle(
+                            color: Colors.white70,
+                          ),
+                        ),
+                        TextSpan(
+                          text: '\$${car.price}',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 25,
+                            letterSpacing: 1,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 5),
+                  Text(
+                    'View Details',
+                    style: TextStyle(
+                      color: Colors.white70,
+                      letterSpacing: 1,
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
 
-// 5 - ......................................................
-Text buildText(String text) {
-  return Text(
-    text,
-    style: TextStyle(
-      fontSize: 28,
-      fontWeight: FontWeight.bold,
-      color: Colors.white,
-      letterSpacing: 1,
-    ),
-  );
-}
-
-// 6 - ................................
-Container buildBottomContainer(IconData icon, String text, Color color) {
+// 5 - ................................
+Container _buildDealerContainer(IconData icon, String text, Color color) {
   return Container(
     padding: EdgeInsets.all(kpadding / 2),
     width: double.infinity,
@@ -287,7 +317,7 @@ Container buildBottomContainer(IconData icon, String text, Color color) {
             Text(
               text,
               style: TextStyle(
-                fontSize: 18,
+                fontSize: 15,
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
               ),
@@ -309,14 +339,13 @@ Container buildBottomContainer(IconData icon, String text, Color color) {
           children: <Widget>[
             Row(
               children: <Widget>[
-                Icon(Icons.star, size: 17, color: Colors.yellow),
-                Icon(Icons.star, size: 17, color: Colors.yellow),
-                Icon(Icons.star, size: 17, color: Colors.yellow),
-                Icon(Icons.star, size: 17, color: Colors.yellow),
-                Icon(Icons.star_border, size: 17, color: Colors.yellow),
+                Icon(Icons.star, size: 15, color: Colors.yellow),
+                Icon(Icons.star, size: 15, color: Colors.yellow),
+                Icon(Icons.star, size: 15, color: Colors.yellow),
+                Icon(Icons.star, size: 15, color: Colors.yellow),
+                Icon(Icons.star_border, size: 15, color: Colors.yellow),
               ],
             ),
-            SizedBox(height: 5),
             Text(
               '234 Offers',
               style: TextStyle(
@@ -332,38 +361,48 @@ Container buildBottomContainer(IconData icon, String text, Color color) {
   );
 }
 
+// 6 - ..................................................
+class BuildBottomNavigationBar extends StatefulWidget {
+  @override
+  _BuildBottomNavigationBarState createState() =>
+      _BuildBottomNavigationBarState();
+}
 
+class _BuildBottomNavigationBarState extends State<BuildBottomNavigationBar> {
+  List<String> buttomNav = [
+    'assets/icons/app.png',
+    'assets/icons/calendar.png',
+    'assets/icons/pin.png',
+    'assets/icons/user.png',
+  ];
 
-// 7 - ..................................................
-Container buildBottomNavigationBar() {
+  int selecTedIndex = 0;
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 25, vertical: 18),
       color: kaccentColor,
       height: 65,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Image.asset(
-            'assets/icons/app.png',
-            color: kbottonColor,
-            height: 40,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: buttomNav.length,
+        itemBuilder: (context, index) => GestureDetector(
+          onTap: () {
+            setState(() {
+              selecTedIndex = index;
+            });
+          },
+          child: Padding(
+            padding: const EdgeInsets.only(right: kpadding * 2, left: kpadding),
+            child: Image.asset(
+              buttomNav[index],
+              height: 40,
+              color: selecTedIndex == index ? kbottonColor : Colors.grey,
+            ),
           ),
-          Image.asset(
-            'assets/icons/calendar.png',
-            color: Colors.grey,
-            height: 40,
-          ),
-          Image.asset(
-            'assets/icons/pin.png',
-            color: Colors.grey,
-            height: 40,
-          ),
-          Image.asset(
-            'assets/icons/user.png',
-            color: Colors.grey,
-            height: 40,
-          ),
-        ],
+        ),
       ),
     );
   }
+}
