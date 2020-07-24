@@ -182,23 +182,27 @@ class BuildGrid extends StatelessWidget {
               ),
               SizedBox(height: 10),
               Expanded(
-                child: Text(
-                  spicification[index]['title'],
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 1,
-                    fontSize: 12,
+                child: FittedBox(
+                  child: Text(
+                    spicification[index]['title'],
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 1,
+                      fontSize: 12,
+                    ),
                   ),
                 ),
               ),
               Expanded(
-                child: Text(
-                  spicification[index]['description'],
-                  style: TextStyle(
-                    color: Colors.grey,
-                    letterSpacing: 1,
-                    fontSize: 10,
+                child: FittedBox(
+                  child: Text(
+                    spicification[index]['description'],
+                    style: TextStyle(
+                      color: Colors.grey,
+                      letterSpacing: 1,
+                      fontSize: 10,
+                    ),
                   ),
                 ),
               )

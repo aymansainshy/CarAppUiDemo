@@ -55,7 +55,7 @@ class LoginScreen extends StatelessWidget {
                   //     ),
                   //   );
                   // }
-
+                   
                   buildText('Email', 25, Colors.grey),
                   SizedBox(height: 10),
                   buildText('Password', 25, Colors.grey),
